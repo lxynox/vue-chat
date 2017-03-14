@@ -1,20 +1,52 @@
 <template lang="pug">
 	div
 		slot {{message}}
-		chat-room
+		login-page(v-show="currentPage === 'login'" v-bind:profile="profile" v-bind:handleEnterBtnClick="joinChat")
+		chat-room(v-show="currentPage === 'room'")
 </template>
 
 <script>
+'use strict'
+
 import ChatRoom from './views/chat-room.vue'
+import LoginPage from './views/user-login.vue'
+import store from './stores'
 
 export default {
+	sockets: {
+		login() {
+		},
+		typing() {
+		},
+		'stop typing'() {
+		},
+		'new message'() {
+		},
+		'user joined'() {
+		},
+		'user left'() {
+		}
+	},
 	name: 'app',
 	components: {
+		LoginPage,
 		ChatRoom
 	},
 	data () {
 		return {
+			currentPage: 'login',
+			profile: store.fetch() || {},
 			message: 'greetings from vue2.0'
+		}
+	},
+	methods: {
+		joinChat(data) {
+			if (data && !store.save(data)) {
+				console.log('Failed to save to storage :(')
+				return
+			}
+			// enter chatroom
+			this.currentPage = 'room'
 		}
 	}
 }
