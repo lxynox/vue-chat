@@ -5,7 +5,7 @@ const express = require('express')
 
 const app = express()
 const server = http.createServer(app)
-const io = require('socket.io')
+const io = require('socket.io')(server)
 
 const port = process.env.PORT || 3000
 
@@ -17,55 +17,47 @@ server.listen(port, () => {
 // app.use(express.static(__dirname + '/public'))
 
 // Chatroom
-let numUsers = 0
+// let numUsers = 0
 
 io.on('connection', socket => {
+	console.log('new client!')
 	let addedUser = false
 
-	socket.on('new message', data => {
-		socket.broadcast.emit('new message', {
-			username: socket.username,
-			message: data
-		})
+	// >sending
+	socket.on('new message', msg => {
+		// socket.emit('new message', msg)
+		socket.broadcast.emit('new message', msg)
 	})
 
-	socket.on('add user', username => {
+	// >joining
+	socket.on('add user', user => {
+		const {username} = user
 		if (addedUser) {
 			return
 		}
 
 		socket.username = username
-		++numUsers
 		addedUser = true
-		socket.emit('login', {
-			numUsers
-		})
-
-		socket.broadcast.emit('user joined', {
-			username: socket.username,
-			numUsers
-		})
+		socket.emit('login', 'Welcome to this crappy chatroom ')
+		socket.broadcast.emit('user joined', user)
 	})
 
-	socket.on('typing', () => {
-		socket.broadcast.emit('typing', {
-			username: socket.username
-		})
+	// >typing
+	socket.on('typing', username => {
+		console.log('user typing');
+		socket.broadcast.emit('typing', username)
 	})
 
-	socket.on('stop typing', () => {
-		socket.broadcast.emit('stop typing', {
-			username: socket.username
-		})
+	socket.on('stop typing', username => {
+		console.log('user stop typing');
+		socket.broadcast.emit('stop typing', username)
 	})
 
+	// >leaving
 	socket.on('disconnect', () => {
 		if (addedUser) {
-			--numUsers
-
 			socket.broadcast.emit('user left', {
 				username: socket.username,
-				numUsers
 			})
 		}
 	})

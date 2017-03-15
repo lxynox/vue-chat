@@ -1,8 +1,8 @@
 <template lang="pug">
 	div
 		slot {{message}}
-		login-page(v-show="currentPage === 'login'" v-bind:profile="profile" v-bind:handleEnterBtnClick="joinChat")
-		chat-room(v-show="currentPage === 'room'")
+		login-page(v-if="currentPage === 'login'" v-bind:profile="profile" v-bind:handleEnterBtnClick="joinChat")
+		chat-room(v-else v-bind:profile="profile")
 </template>
 
 <script>
@@ -13,21 +13,10 @@ import LoginPage from './views/user-login.vue'
 import store from './stores'
 
 export default {
-	sockets: {
-		login() {
-		},
-		typing() {
-		},
-		'stop typing'() {
-		},
-		'new message'() {
-		},
-		'user joined'() {
-		},
-		'user left'() {
-		}
-	},
 	name: 'app',
+	created() {
+		// store.clear()
+	},
 	components: {
 		LoginPage,
 		ChatRoom
@@ -41,9 +30,12 @@ export default {
 	},
 	methods: {
 		joinChat(data) {
-			if (data && !store.save(data)) {
-				console.log('Failed to save to storage :(')
-				return
+			if (data) {
+				this.profile = data
+				if (!store.save(data)) {
+					console.log('Failed to save to storage :(')
+					return
+				}
 			}
 			// enter chatroom
 			this.currentPage = 'room'

@@ -6,13 +6,12 @@
 				img(:src="profile.avatar" alt="user avatar" height=200 width=200)
 			p {{profile.username}}
 
-		section.new_user(v-if="!profile.username")
+		section.new_user(v-else)
 			//- h2 new user
 			form
 				div.avatar
-					div(@click="selectAvatar")
-						input(type="file" @change="onFileChange")
-						img(:src="avatar" @click="selectAvatar" width=100 height=100)
+					input(type="file" @change="onFileChange")
+					img(:src="avatar" @click="selectAvatar" width=100 height=100)
 				div.username
 					input(v-model="username" type="text" placeholder="username here")
 
@@ -83,7 +82,9 @@ export default {
 		onEnterBtnClicked() {
 			const data = this.profile.username? null : {
 				avatar:  this.avatar,
-				username: this.username
+				username: this.username,
+				isTyping: false,
+				left: false
 			}
 			this.handleEnterBtnClick(data)
 		}
@@ -125,23 +126,25 @@ export default {
 			flex: 1
 			-webkit-flex: 1
 			position: relative
-			div
+			img
+				background: no-repeat center/120% url(../assets/avatar.png)
 				position: absolute
 				right: 25px
 				bottom: 10px
-				border: 1px dotted darkgrey
+				padding: 0
+				border: 2px gold solid
+				border-radius: 10px 10px 10px 10px
+				box-shadow: 0 0 .2em black
 				height: 100px
 				width: 100px
-				input
-					display: none
+			input
+				display: none
 		div.username
 			flex: 1
 			-webkit-flex: 1
 			border: 1px solid lightgreen
 			/*position: relative*/
 			input
-				&:focus
-					border: 0
 				font-size: 1.5em
 				width: 100%
 				height: 100%
