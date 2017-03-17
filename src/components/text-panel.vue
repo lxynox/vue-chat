@@ -1,7 +1,7 @@
 <template lang="pug">
 	ul
 		li(v-for="msg in messages")
-			message(v-bind:message="msg" v-bind:isMyMsg="msg.from === user")
+			message(:class="{my_msg: msg.from === user}" v-bind:message="msg" v-bind:isMyMsg="msg.from === user")
 </template>
 
 <script>
@@ -33,7 +33,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-li
-	list-style: none
 
+ul
+	flex 80%
+	border 1px solid gold
+	padding 0
+	height 300px
+	overflow-y scroll
+	li
+		list-style none
+		width 100%
+		margin: 10px auto
+		/*background-color olive*/
 </style>

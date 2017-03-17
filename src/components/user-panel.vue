@@ -1,9 +1,11 @@
 <template lang="pug">
 	ul
-		li(v-for="user in users") {{user.username}}
-			span(v-if="user.isTyping") ❮is typing ...❯
-			span(v-else-if="user.left") ❮has left❯
-			span(v-else) ❮active❯
+		li(v-for="user in users")
+			span {{ user.avatar }}
+				span {{ user.username }}
+			span(v-if="user.left") ❮ <b>⏏</b> ❯
+			span(v-else) ❮ <b>✔</b> ❯
+			span(v-visible="user.isTyping") is typing ...
 </template>
 
 <script lang="">
@@ -17,17 +19,34 @@ export default {
 		return {}
 	},
 	computed: {},
-	methods: {}
+	methods: {},
+	directives: {
+		visible(el, binding) {
+			const visible = binding.value
+			if (visible) {
+				el.style.visibility = 'visible'
+				el.style.color = '#ccc'
+			} else {
+				el.style.visibility = 'hidden'
+			}
+		}
+	}
 }
 </script>
 
 <style lang="stylus" scoped>
 ul
+	flex 30%
+	font-size .5em
 	padding: 0
 	margin: 0
 	li
-		/*text-align: start*/
-		list-style: none
-		&:before
-			content: '🤧'
+		display flex
+		display -webkit-flex
+		flex-flow row nowrap
+		justify-content space-around
+		list-style none
+		border 1px gold solid
+		span b
+			color green
 </style>

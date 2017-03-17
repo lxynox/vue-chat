@@ -1,9 +1,7 @@
 <template lang="pug">
-	div
-		div.message_meta
-			img(:class="{pull_right: isMyMsg}" src="message.from.avatar" alt="user avatar" width=50 height=50)
-			span  {{ message.at }}
-		p.message_content {{message.text}}
+	div.message(:class="{myMessage: isMyMsg}")
+		span.content(:style="contentStyle") {{ message.text }}
+		span.avatar(:style="avatarStyle") {{ message.from.avatar }}
 </template>
 
 <script lang="">
@@ -12,21 +10,46 @@
 export default {
 	name: 'message',
 	props: ['message', 'isMyMsg'],
-	// functional: true,
+	computed: {
+		contentStyle () {
+			const style = {
+				backgroundColor: 'rgba(13, 90, 193, 0.6)'
+			}
+			return this.isMyMsg
+				? style
+				: null
+		},
+		avatarStyle () {
+			const style = {
+				float: 'right !important'
+			}
+			return this.isMyMsg
+				? style
+				: null
+		}
+	}
 }
 </script>
 
 <style lang="stylus" scoped>
-.pull_left
-	float: left
-.pull_right
-	float: right
-div
-	width: 400px
-	border: groove olive 1px
-	.message_meta
-		background-color: lightgrey
-	.message_content
-		margin: 0
-		background-color: lightblue
+
+my-msg-bgcolor = lightblue
+others-msg-bgcolor = #ccc
+
+.myMessage
+	text-align right !important
+
+div.message
+	text-align left
+	span.avatar
+		float left
+		margin 0 20px
+	span.content
+		max-width 200px
+		overflow-wrap break-word
+		padding 0 10px
+		display  inline-block
+		border-radius 5px 5px 5px 5px
+		background-color others-msg-bgcolor
+
 </style>

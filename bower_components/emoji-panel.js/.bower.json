@@ -1,0 +1,25 @@
+{
+  "name": "emoji-panel.js",
+  "version": "0.5.1",
+  "description": "Add panel picker for emojis with different types of sets on your website. http://TimeToKnow.github.io/emoji-panel/",
+  "main": [
+    "dist/emoji-panel.js",
+    "dist/emoji-panel-apple-32.css"
+  ],
+  "ignore": [],
+  "homepage": "https://github.com/TimeToKnow/emoji-panel",
+  "authors": [
+    "unimonkiez <unimonkiez@gmail.com>"
+  ],
+  "license": "MIT",
+  "_release": "0.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.1",
+    "commit": "df13e5e1a2402a2643a2c1f4c61d1371d144400e"
+  },
+  "_source": "https://github.com/TimeToKnow/emoji-panel.git",
+  "_target": "^0.5.1",
+  "_originalSource": "emoji-panel",
+  "_direct": true
+}

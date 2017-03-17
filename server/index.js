@@ -18,10 +18,11 @@ server.listen(port, () => {
 
 // Chatroom
 // let numUsers = 0
+let users = []
 
 io.on('connection', socket => {
 	console.log('new client!')
-	let addedUser = false
+	let curUser
 
 	// >sending
 	socket.on('new message', msg => {
@@ -32,32 +33,33 @@ io.on('connection', socket => {
 	// >joining
 	socket.on('add user', user => {
 		const {username} = user
-		if (addedUser) {
+		if (curUser) {
 			return
 		}
 
-		socket.username = username
-		addedUser = true
-		socket.emit('login', 'Welcome to this crappy chatroom ')
+		users.push(user)
+		curUser = user
+		socket.emit('login', users, 'Welcome to this crappy chatroom ')
 		socket.broadcast.emit('user joined', user)
 	})
 
 	// >typing
 	socket.on('typing', username => {
-		console.log('user typing');
+		console.log('user typing')
 		socket.broadcast.emit('typing', username)
 	})
 
 	socket.on('stop typing', username => {
-		console.log('user stop typing');
+		console.log('user stop typing')
 		socket.broadcast.emit('stop typing', username)
 	})
 
 	// >leaving
 	socket.on('disconnect', () => {
-		if (addedUser) {
+		if (curUser) {
+			users.splice(users.indexOf(curUser), 1)
 			socket.broadcast.emit('user left', {
-				username: socket.username,
+				username: socket.username
 			})
 		}
 	})

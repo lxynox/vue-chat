@@ -1612,6 +1612,16 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+emoji-datasource@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/emoji-datasource/-/emoji-datasource-2.4.4.tgz#b97ac1896bc208ecf1833564a20687a5215d0389"
+
+emoji-panel:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/emoji-panel/-/emoji-panel-0.5.1.tgz#92c4977e421825be6b2a6b073c5b2b9f99f74c8e"
+  dependencies:
+    emoji-datasource "^2.4.4"
+
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"

@@ -1,7 +1,7 @@
 <template lang="pug">
-	div
+	div.room
 		text-panel(v-bind:user="profile" v-bind:messages="messages")
-		text-input(v-bind:user="profile" @typing="handleTyping" @stopTyping="handleStopTyping" @send='handleSend')
+		text-input(v-bind:user="profile" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
 		user-panel(v-bind:users="users")
 </template>
 
@@ -22,20 +22,25 @@ export default {
 		TextInput,
 		UserPanel
 	},
+	data () {
+		const data = {
+			users: [this.profile],
+			messages: [],
+		}
+		return data
+	},
 	created() {
-		this.users.push(this.profile)
+		this.$socket.emit('add user', this.profile)
 	},
 	sockets: {
-		login (data) {
-			alert(data)
+		login (users, message) {
+			// alert(message)
+			this.users = [users[users.length-1], ...users.slice(0, -1)]
 		},
 		'user joined' (newUser) {
-			// console.debug('new user joined!')
 			this.users.push(newUser)
 		},
 		typing (username) {
-			// console.debug('🤡', username);
-			//
 			// The reactivity system will not trigger if you add or change an object directly in javascript. Specifically in the case of arrays
 			// Use `Vue.set` to work around: https://vuejs.org/v2/guide/list.html#Caveats
 			for (const [idx, user] of this.users.entries()) {
@@ -56,7 +61,7 @@ export default {
 			}
 		},
 		'new message' (message) {
-			this.messages.push(msg)
+			this.messages.push(message)
 		},
 		'edited message' (message) {
 
@@ -78,32 +83,30 @@ export default {
 			}
 		}
 	},
-	data () {
-		const data = {
-			users: [], //TODO: remove mock data
-			messages: [],
-		}
-		return data
-	},
 	methods: {
 		handleTyping () {
 			const username = this.profile.username
 			this.$options.sockets.typing.call(this, username)
-			// this.$socket.emit('typing', username)
+			this.$socket.emit('typing', username)
 		},
 		handleStopTyping () {
 			const username = this.profile.username
 			this.$options.sockets['stop typing'].call(this, username)
-			// this.$socket.emit('stop typing', username)
+			this.$socket.emit('stop typing', username)
 		},
 		handleSend (msg) {
 			this.messages.push(msg)
 			this.$socket.emit('new message', msg)
 		}
-	},
-	computed: {},
+	}
 }
 </script>
 
 <style lang="stylus" scoped>
+
+.room
+	display flex
+	flex-direction row
+	flex-wrap wrap
+	justify-content flex-start
 </style>

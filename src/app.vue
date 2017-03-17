@@ -1,7 +1,7 @@
 <template lang="pug">
-	div
-		slot {{message}}
-		login-page(v-if="currentPage === 'login'" v-bind:profile="profile" v-bind:handleEnterBtnClick="joinChat")
+	div.app
+		slot {{ message }}
+		login-page(v-if="currentPage === 'login'" v-bind:profile="profile" @onJoinChat="handleJoinChat")
 		chat-room(v-else v-bind:profile="profile")
 </template>
 
@@ -14,9 +14,6 @@ import store from './stores'
 
 export default {
 	name: 'app',
-	created() {
-		// store.clear()
-	},
 	components: {
 		LoginPage,
 		ChatRoom
@@ -28,8 +25,11 @@ export default {
 			message: 'greetings from vue2.0'
 		}
 	},
+	created() {
+		// alert('bootstrap app...')
+	},
 	methods: {
-		joinChat(data) {
+		handleJoinChat(data) {
 			if (data) {
 				this.profile = data
 				if (!store.save(data)) {
@@ -50,13 +50,16 @@ html
 	font-size: 30px
 	text-align: center
 	height: 100%
-body
-	height: @height
-	border: 2px groove lightgrey
-
-#app
-	display: flex
-	flex-direction: column
-	justify-content: center
-	height: 100%
+	body
+		display: flex
+		flex-direction: column
+		justify-content: center
+		align-items: center
+		padding: 0
+		border: 3px ridge lightgrey
+		height: @height
+		.app
+			border: 2px orange outset
+			width: 80%
+			max-width: 768px
 </style>
