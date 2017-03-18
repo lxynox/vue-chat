@@ -1,6 +1,7 @@
 <template lang="pug">
 	div.message(:class="{myMessage: isMyMsg}")
-		span.content(:style="contentStyle") {{ message.text }}
+		input(v-if="edited" v-model="editedMsg" @keyup.enter="doneEdit" @blur="doneEdit")
+		span.content(v-else :style="contentStyle" @dblclick="handleDBClick") {{ message.text }}
 		span.avatar(:style="avatarStyle") {{ message.from.avatar }}
 </template>
 
@@ -10,6 +11,12 @@
 export default {
 	name: 'message',
 	props: ['message', 'isMyMsg'],
+	data () {
+		return {
+			edited: false,
+			editedMsg: null
+		}
+	},
 	computed: {
 		contentStyle () {
 			const style = {
@@ -26,6 +33,19 @@ export default {
 			return this.isMyMsg
 				? style
 				: null
+		}
+	},
+	methods: {
+		handleDBClick (e) {
+			if (!this.isMyMsg) {
+				return
+			}
+			this.editedMsg = e.target.textContent
+			this.edited = true
+		},
+		doneEdit () {
+			this.$emit('onEditMessage', this.message, this.editedMsg)
+			this.edited = false
 		}
 	}
 }

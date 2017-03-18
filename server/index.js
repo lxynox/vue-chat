@@ -30,6 +30,16 @@ io.on('connection', socket => {
 		socket.broadcast.emit('new message', msg)
 	})
 
+	// >editing
+	socket.on('edit message', (idx, msg) => {
+		socket.broadcast.emit('edit message', idx, msg)
+	})
+
+	// >withdrawing
+	socket.on('withdraw message', idx => {
+		socket.broadcast.emit('withdraw message', idx)
+	})
+
 	// >joining
 	socket.on('add user', user => {
 		const {username} = user

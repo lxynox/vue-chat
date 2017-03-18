@@ -1,7 +1,7 @@
 <template lang="pug">
-	ul
+	ul.text_panel
 		li(v-for="msg in messages")
-			message(:class="{my_msg: msg.from === user}" v-bind:message="msg" v-bind:isMyMsg="msg.from === user")
+			message(:class="{my_msg: msg.from === user}" v-bind:message="msg" v-bind:isMyMsg="msg.from === user" @onEditMessage="handleEditMessage" )
 </template>
 
 <script>
@@ -24,17 +24,17 @@ export default {
 			required: true
 		}
 	},
-	data () {
-		return {}
+	methods: {
+		handleEditMessage (message, editedText) {
+			this.$emit('onEditDone', message, editedText)
+		}
 	},
-	methods: {},
-	computed: {},
 }
 </script>
 
 <style lang="stylus" scoped>
 
-ul
+ul.text_panel
 	flex 80%
 	border 1px solid gold
 	padding 0

@@ -1,6 +1,6 @@
 <template lang="pug">
 	div.room
-		text-panel(v-bind:user="profile" v-bind:messages="messages")
+		text-panel(v-bind:user="profile" v-bind:messages="messages" @onEditDone="handleEditDone")
 		text-input(v-bind:user="profile" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
 		user-panel(v-bind:curUser="profile" v-bind:users="users" @onStatusChange="handleStatusChange")
 </template>
@@ -63,16 +63,11 @@ export default {
 		'new message' (message) {
 			this.messages.push(message)
 		},
-		'edited message' (message) {
-
+		'edit message' (idx, message) {
+			Vue.set(this.messages, idx, message)
 		},
-		'withdraw message' (message) {
-			for (const [idx, m] of this.messages.entries()) {
-				if (m.content === message.content) {
-					this.messages.splice(idx, 1)
-					break
-				}
-			}
+		'withdraw message' (idx) {
+			this.messages.splice(idx, 1)
 		},
 		'update status' (username, status) {
 			for (const [idx, user] of this.users.entries()) {
@@ -106,9 +101,24 @@ export default {
 			this.$options.sockets['stop typing'].call(this, username)
 			this.$socket.emit('stop typing', username)
 		},
-		handleSend (msg) {
-			this.messages.push(msg)
-			this.$socket.emit('new message', msg)
+		handleSend (message) {
+			this.messages.push(message)
+			this.$socket.emit('new message', message)
+		},
+		handleEditDone (message, editedText) {
+			const idx = this.messages.indexOf(message)
+			const text = editedText ? editedText.trim() : null
+
+			if (!text) {
+				this.messages.splice(idx, 1)
+				this.$socket.emit('withdraw message', idx)
+				return
+			}
+
+			message.text = text
+			message.at = new Date()
+			Vue.set(this.messages, idx, message)
+			this.$socket.emit('edit message', idx, message)
 		}
 	}
 }
