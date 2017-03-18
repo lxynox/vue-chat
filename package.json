@@ -23,7 +23,9 @@
 		]
 	},
 	"dependencies": {
+		"emoji-panel": "^0.5.1",
 		"express": "^4.15.2",
+		"marked": "^0.3.6",
 		"socket.io": "^1.7.3",
 		"socket.io-client": "^1.7.3",
 		"vue": "^2.2.1"
