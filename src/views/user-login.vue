@@ -68,8 +68,8 @@ export default {
 			const data = this.profile.username? null : {
 				avatar:  this.avatar,
 				username: this.username,
-				isTyping: false,
-				left: false
+				status: 'online',
+				isTyping: false
 			}
 			this.$emit('onJoinChat', data)
 		}

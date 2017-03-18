@@ -54,6 +54,11 @@ io.on('connection', socket => {
 		socket.broadcast.emit('stop typing', username)
 	})
 
+	// >updating status
+	socket.on('update status', (username, status) => {
+		socket.broadcast.emit('update status', username, status)
+	})
+
 	// >leaving
 	socket.on('disconnect', () => {
 		if (curUser) {

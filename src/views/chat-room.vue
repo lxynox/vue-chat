@@ -2,7 +2,7 @@
 	div.room
 		text-panel(v-bind:user="profile" v-bind:messages="messages")
 		text-input(v-bind:user="profile" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
-		user-panel(v-bind:users="users")
+		user-panel(v-bind:curUser="profile" v-bind:users="users" @onStatusChange="handleStatusChange")
 </template>
 
 <script>
@@ -35,7 +35,7 @@ export default {
 	sockets: {
 		login (users, message) {
 			// alert(message)
-			this.users = [users[users.length-1], ...users.slice(0, -1)]
+			this.users = [this.profile, ...users.slice(0, -1)]
 		},
 		'user joined' (newUser) {
 			this.users.push(newUser)
@@ -74,6 +74,14 @@ export default {
 				}
 			}
 		},
+		'update status' (username, status) {
+			for (const [idx, user] of this.users.entries()) {
+				if (user.username === username) {
+					user.status = status
+					Vue.set(this.users, idx, user)
+				}
+			}
+		},
 		'user left' (username) {
 			for (const [idx, user] of this.users.entries()) {
 				if (user.username === username) {
@@ -84,6 +92,10 @@ export default {
 		}
 	},
 	methods: {
+		handleStatusChange(newStatus) {
+			const username = this.profile.username
+			this.$socket.emit('update status', username, newStatus)
+		},
 		handleTyping () {
 			const username = this.profile.username
 			this.$options.sockets.typing.call(this, username)

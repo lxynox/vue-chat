@@ -25,7 +25,10 @@ export default {
 			message: 'greetings from vue2.0'
 		}
 	},
-	created() {
+	beforeCreate () {
+		store.clear()
+	},
+	created () {
 		// alert('bootstrap app...')
 	},
 	methods: {

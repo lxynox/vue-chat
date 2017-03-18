@@ -1,11 +1,16 @@
 <template lang="pug">
-	ul
-		li(v-for="user in users")
-			span {{ user.avatar }}
+	div.panel
+		ul
+			li(v-for="user in users")
+				span {{ user.avatar }}
 				span {{ user.username }}
-			span(v-if="user.left") ❮ <b>⏏</b> ❯
-			span(v-else) ❮ <b>✔</b> ❯
-			span(v-visible="user.isTyping") is typing ...
+				select(@change="handleChange" v-model="status")(v-if="user === curUser")
+					option(disabled) choose from following
+					option online
+					option away
+					option busy
+				span(v-else) {{ user.status }}
+				span(v-visible="user.isTyping") is typing ...
 </template>
 
 <script lang="">
@@ -13,13 +18,26 @@
 
 export default {
 	name: 'UserPanel',
-	props: ['users'],
-	components: {},
-	data () {
-		return {}
+	props: {
+		users: {
+			required: true,
+			type: Array
+		},
+		curUser: {
+			required: true,
+			type: Object
+		}
 	},
-	computed: {},
-	methods: {},
+	data () {
+		return {
+			status: 'online'
+		}
+	},
+	methods: {
+		handleChange () {
+			this.$emit('onStatusChange', this.status)
+		}
+	},
 	directives: {
 		visible(el, binding) {
 			const visible = binding.value
@@ -35,18 +53,20 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-ul
+.panel
 	flex 30%
-	font-size .5em
-	padding: 0
-	margin: 0
-	li
-		display flex
-		display -webkit-flex
-		flex-flow row nowrap
-		justify-content space-around
-		list-style none
-		border 1px gold solid
-		span b
-			color green
+	ul
+		font-size .5em
+		padding: 0
+		margin: 0
+		li
+			border 1px gold solid
+			list-style none
+			display flex
+			justify-content space-around
+			align-items center
+			select
+				width 80px
+			span b
+				color green
 </style>
