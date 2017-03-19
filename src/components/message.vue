@@ -1,6 +1,6 @@
 <template lang="pug">
-	div.message(:class="{myMessage: isMyMsg}")
-		input(v-if="editing" v-model="editedMsg" @keyup.enter="doneEdit" @blur="doneEdit")
+	div.message(:class="{myMessage: isMyMSG}")
+		input(v-if="editing" v-model="editedMSG" @keyup.enter="doneEdit" @blur="doneEdit")
 		span.content(v-else :style="contentStyle" @dblclick="handleDBClick" v-html="message.text")
 		span.avatar(:style="avatarStyle") {{ message.from.avatar }}
 </template>
@@ -10,11 +10,11 @@
 
 export default {
 	name: 'message',
-	props: ['message', 'isMyMsg'],
+	props: ['message', 'isMyMSG'],
 	data () {
 		return {
 			editing: false,
-			editedMsg: null
+			editedMSG: null
 		}
 	},
 	computed: {
@@ -22,7 +22,7 @@ export default {
 			const style = {
 				backgroundColor: 'rgba(13, 90, 193, 0.6)'
 			}
-			return this.isMyMsg
+			return this.isMyMSG
 				? style
 				: null
 		},
@@ -30,28 +30,26 @@ export default {
 			const style = {
 				float: 'right !important'
 			}
-			return this.isMyMsg
+			return this.isMyMSG
 				? style
 				: null
 		}
 	},
 	methods: {
 		handleDBClick (e) {
-			if (!this.isMyMsg) {
+			if (!this.isMyMSG) {
 				return
 			}
-			this.editedMsg = e.target.textContent
+			this.editedMSG = e.target.textContent
 			this.editing = true
 		},
 		doneEdit () {
-			if (this.message.text === this.editedMsg) {
+			if (this.message.text === this.editedMSG) {
+				this.editing = false
 				return
 			}
-			const newMSG = Object.assign({}, this.message, {
-				text: this.editedMsg,
-				at: new Date()
-			})
-			this.$emit('onEditMessage', this.message, newMSG)
+
+			this.$emit('onEditDone', this.editedMSG, this.message)
 			this.editing = false
 		}
 	}

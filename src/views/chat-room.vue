@@ -1,8 +1,8 @@
 <template lang="pug">
 	div.room
-		text-panel(v-bind:curUser="curUser" v-bind:messages="messages" @onEditDone="handleEditDone")
-		text-input(v-bind:curUser="curUser" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
-		user-panel(v-bind:curUser="curUser" v-bind:users="users" @onStatusChange="handleStatusChange")
+		text-panel(v-bind:curUser="curUser" v-bind:messages="messages")
+		text-input(v-bind:curUser="curUser")
+		user-panel(v-bind:curUser="curUser" v-bind:users="users")
 </template>
 
 <script>
@@ -40,68 +40,50 @@ export default {
 		'new client' (user) {
 			this.addUser({ user })
 		},
-		typing (uID) {
-			this.typing({ uID })
-		},
-		'stop typing' (uID) {
-			this.stopTyping({ uID })
-		},
-		'update status' (uID, status) {
-			this.changeStatus({ uID, status })
-		},
+		// typing (uID) {
+		// 	this.typing({ uID })
+		// },
+		// 'stop typing' (uID) {
+		// 	this.stopTyping({ uID })
+		// },
+		// 'update status' (uID, status) {
+		// 	this.changeStatus({ uID, status })
+		// },
 		'user left' (uID) {
 			this.leave({ uID })
 		},
 		// -msg handlers
-		'new message' (message) {
-			this.addMSG({ message })
-		},
-		'edit message' (mID, message) {
-			this.editMSG({ mID, message })
-		},
-		'withdraw message' (mID) {
-			this.removeMSG({ mID })
-		}
+		// 'new message' (message) {
+		// 	this.addMSG({ message })
+		// },
 	},
 	methods: {
 		...mapMutations({
 			join: types.JOIN_CHAT,
 			addUser: types.NEW_CLIENT,
 			leave: types.LEAVE_CHAT,
-			typing: types.TYPING,
-			stopTyping: types.STOP_TYPING,
-			changeStatus: types.CHANGE_CHAT_STATUS,
-			addMSG: types.ADD_MESSAGE,
-			editMSG: types.EDIT_MESSAGE,
-			removeMSG: types.WITHDRAW_MESSAGE
+			// typing: types.TYPING,
+			// stopTyping: types.STOP_TYPING,
+			// changeStatus: types.CHANGE_CHAT_STATUS,
+			// addMSG: types.ADD_MESSAGE,
+			// editMSG: types.EDIT_MESSAGE,
+			// removeMSG: types.WITHDRAW_MESSAGE
 		}),
-		handleStatusChange(newStatus) {
-			this.$socket.emit('update status', newStatus)
-		},
-		handleTyping () {
-			this.$options.sockets.typing.call(this, this.curUser.id)
-			this.$socket.emit('typing')
-		},
-		handleStopTyping () {
-			this.$options.sockets['stop typing'].call(this, this.curUser.id)
-			this.$socket.emit('stop typing')
-		},
-		handleSend (message) {
-			this.$options.sockets['new message'].call(this, message)
-			this.$socket.emit('new message', message)
-		},
-		handleEditDone (mID, editedMSG) {
-			const text = editedMSG.text ? editedMSG.text.trim() : null
-
-			if (!text) {
-				this.$options.sockets['withdraw message'].call(this, mID)
-				this.$socket.emit('withdraw message', mID)
-				return
-			}
-
-			this.$options.sockets['edit message'].call(this, mID, editedMSG)
-			this.$socket.emit('edit message', mID, editedMSG)
-		}
+		// handleStatusChange(newStatus) {
+		// 	this.$socket.emit('update status', newStatus)
+		// },
+		// handleTyping () {
+		// 	this.$options.sockets.typing.call(this, this.curUser.id)
+		// 	this.$socket.emit('typing')
+		// },
+		// handleStopTyping () {
+		// 	this.$options.sockets['stop typing'].call(this, this.curUser.id)
+		// 	this.$socket.emit('stop typing')
+		// },
+		// handleSend (message) {
+		// 	this.$options.sockets['new message'].call(this, message)
+		// 	this.$socket.emit('new message', message)
+		// },
 	}
 }
 </script>

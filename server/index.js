@@ -74,6 +74,7 @@ io.on('connection', socket => {
 	socket.on('new message', msg => {
 		msg.id = mIDs++
 		messages.push(msg)
+		socket.emit('new message', msg)
 		socket.broadcast.emit('new message', msg)
 	})
 

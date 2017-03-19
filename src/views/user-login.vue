@@ -1,12 +1,12 @@
 <template lang="pug">
 	section.login
+		//- h2 returning user
 		section.returning_user(v-if="curUser")
-			//- h2 returning user
 			div.image {{curUser.avatar}}
 			p {{curUser.name}}
 
+		//- h2 new user
 		section.new_user(v-else)
-			//- h2 new user
 			emoji-picker(v-show="picker" v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
 			form
 				div.avatar
@@ -21,10 +21,11 @@
 <script>
 'use strict'
 
+import { mapMutations } from 'vuex'
+
 import EmojiPicker from '../components/emoji-picker.vue'
 
 import * as types from '../stores/mutation-types'
-// import { mapMutations } from 'vuex'
 
 export default {
 	name: 'LoginPage',
@@ -38,7 +39,7 @@ export default {
 	},
 	sockets: {
 		['logged in'] (user) {
-			this.$store.commit(types.LOGIN, { user })
+			this.login({ user })
 		}
 	},
 	data () {
@@ -61,6 +62,9 @@ export default {
 		}
 	},
 	methods: {
+		...mapMutations({
+			login: types.LOGIN
+		}),
 		handleSelectAvatar () {
 			this.picker = !this.picker
 		},

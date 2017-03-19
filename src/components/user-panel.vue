@@ -16,6 +16,10 @@
 <script lang="">
 'use strict'
 
+import { mapMutations } from 'vuex'
+
+import * as types from '../stores/mutation-types'
+
 export default {
 	name: 'UserPanel',
 	props: {
@@ -28,14 +32,22 @@ export default {
 			type: Object
 		}
 	},
+	sockets: {
+		'update status' (uID, status) {
+			this.change({ uID, status })
+		}
+	},
 	data () {
 		return {
 			status: 'online'
 		}
 	},
 	methods: {
+		...mapMutations({
+			change: types.CHANGE_CHAT_STATUS
+		}),
 		handleChange () {
-			this.$emit('onStatusChange', this.status)
+			this.$socket.emit('update status', this.status)
 		}
 	},
 	directives: {

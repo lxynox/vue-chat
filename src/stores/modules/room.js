@@ -14,6 +14,9 @@ const mutations = {
 	},
 	[types.LEAVE_CHAT] (state, { uID }) {
 		const idx = state.users.map(user => user.id).indexOf(uID)
+		if (idx === -1) {
+			throw new Error('User not exists')
+		}
 		state.users.splice(idx, 1)
 	},
 	[types.NEW_CLIENT] (state, { user }) {
@@ -21,18 +24,27 @@ const mutations = {
 	},
 	[types.TYPING] (state, { uID }) {
 		const idx = state.users.map(user => user.id).indexOf(uID)
+		if (idx === -1) {
+			throw new Error('User not exists')
+		}
 		const user = state.users[idx]
 		user.isTyping = true
 		Vue.set(state.users, idx, user)
 	},
 	[types.STOP_TYPING] (state, { uID }) {
 		const idx = state.users.map(user => user.id).indexOf(uID)
+		if (idx === -1) {
+			throw new Error('User not exists')
+		}
 		const user = state.users[idx]
 		user.isTyping = false
 		Vue.set(state.users, idx, user)
 	},
 	[types.CHANGE_CHAT_STATUS] (state, { uID, status }) {
 		const idx = state.users.map(user => user.id).indexOf(uID)
+		if (idx === -1) {
+			throw new Error('User not exists')
+		}
 		const user = state.users[idx]
 		user.status = status
 		Vue.set(state.users, idx, user)
@@ -44,12 +56,16 @@ const mutations = {
 	},
 	[types.WITHDRAW_MESSAGE] (state, { mID }) {
 		const idx = state.messages.map(msg => msg.id).indexOf(mID)
-		state.messages.splice(idx, 1)
+		if (idx !== -1) {
+			state.messages.splice(idx, 1)
+		}
 	},
 	[types.EDIT_MESSAGE] (state, { mID, message }) {
 		const idx = state.messages.map(msg => msg.id).indexOf(mID)
-		state.messages[idx] = message
-		Vue.set(state.messages, idx, state.messages[idx])
+		if (idx !== -1) {
+			state.messages[idx] = message
+			Vue.set(state.messages, idx, state.messages[idx])
+		}
 	}
 }
 

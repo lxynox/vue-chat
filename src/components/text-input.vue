@@ -6,8 +6,8 @@
 			div(v-html="compiledMarkdown")
 
 		ul.btns
-			li(@click.prevent="handleEmojiBtnClick" name="emoji-btn") emoji
-			li(@click.prevent="handleMarkdownBtnClick" name="markdown-btn") md
+			li(@click.prevent="handleEmojiBtnClick") emoji
+			li(@click.prevent="handleMarkdownBtnClick") md
 		div.texts
 			textarea(:value="message" @input="handleInput" placeholder="type messages here" name="message")
 			button(@click.prevent="handleSendBtnClick" name="send-btn") send
@@ -19,20 +19,28 @@
 import EmojiPicker from './emoji-picker.vue'
 import marked from 'marked'
 
+import { mapMutations } from 'vuex'
+import * as types from '../stores/mutation-types'
+
 // debouncing user typing events
 let timeout
 const TYPING_TIMER_LENGTH = 500
 
 export default {
 	name: 'text-input',
-	props: ['curUser' ],
+	props: {
+		curUser: {
+			required: true,
+			type: Object
+		}
+	},
 	components: {
 		EmojiPicker
 	},
 	data() {
 		return {
 			message: '',
-			typing: false,
+			isTyping: false,
 			inputOptions: ''
 		}
 	},
@@ -43,6 +51,17 @@ export default {
 			height: '200px'
 		}
 	},
+	sockets: {
+		typing (uID) {
+			this.typing({ uID })
+		},
+		'stop typing' (uID) {
+			this.stopTyping({ uID })
+		},
+		'new message' (message) {
+			this.addMSG({ message })
+		}
+	},
 	computed: {
 		compiledMarkdown () {
 			// https://vuejs.org/v2/examples/
@@ -50,9 +69,13 @@ export default {
 		}
 	},
 	methods: {
+		...mapMutations({
+			addMSG: types.ADD_MESSAGE,
+			typing: types.TYPING,
+			stopTyping: types.STOP_TYPING
+		}),
 		handlePickEmoji (emoji) {
 			this.message += String.fromCodePoint(`0x${emoji.unified}`)
-
 		},
 		handleEmojiBtnClick () {
 			if (this.inputOptions === 'emoji') {
@@ -70,15 +93,17 @@ export default {
 		},
 		handleInput (evt) {
 			// debouncing
-			if (!this.typing) {
-				this.typing = true
-				this.$emit('onTyping')
+			if (!this.isTyping) {
+				this.isTyping = true
+				this.$socket.emit('typing')
+				this.$options.sockets.typing.call(this, this.curUser.id)
 			}
 
 			function later() {
 				timeout = null
-				this.typing = false
-				this.$emit('onStopTyping')
+				this.isTyping = false
+				this.$socket.emit('stop typing')
+				this.$options.sockets['stop typing'].call(this, this.curUser.id)
 				this.message = evt.target.value
 			}
 
@@ -93,13 +118,13 @@ export default {
 				return
 			}
 
+			this.message = ''
 			const msg = {
 				text,
 				from: this.curUser,
 				at: new Date()
 			}
-			this.$emit('onSend', msg)
-			this.message = ''
+			this.$socket.emit('new message', msg)
 		}
 	}
 }

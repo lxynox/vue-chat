@@ -8,11 +8,12 @@
 <script>
 'use strict'
 
+import { mapState } from 'vuex'
+
 import ChatRoom from './views/chat-room.vue'
 import LoginPage from './views/user-login.vue'
 
-import {mapState} from 'vuex'
-import {clear} from './apis'
+import { clear } from './apis'
 
 export default {
 	name: 'app',
@@ -30,7 +31,6 @@ export default {
 	created () {
 		this.message = 'Welcome to Vue 2.0!'
 		alert('bootstrap app...')
-		// alert('current page: ' + this.curPage)
 	}
 }
 </script>
