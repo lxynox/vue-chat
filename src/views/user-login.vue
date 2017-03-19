@@ -1,21 +1,21 @@
 <template lang="pug">
 	section.login
-		section.returning_user(v-if="profile.username")
+		section.returning_user(v-if="curUser")
 			//- h2 returning user
-			div.image {{profile.avatar}}
-			p {{profile.username}}
+			div.image {{curUser.avatar}}
+			p {{curUser.name}}
 
 		section.new_user(v-else)
 			//- h2 new user
-			emoji-picker(v-show="openEmojiPicker" v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
+			emoji-picker(v-show="picker" v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
 			form
 				div.avatar
 					span.image(@click="handleSelectAvatar") {{avatar}}
-				div.username
-					input(v-model="username" type="text" placeholder="username here")
+				div.name
+					input(v-model="name" type="text" placeholder="name here")
 
 		div.enter_btn
-			button(@click="handleEnterBtnClick" v-disable="disableEnter") Choose avatar and username
+			button(@click="handleEnterBtnClick" v-disable="disableEnter") Choose avatar and name
 </template>
 
 <script>
@@ -23,15 +23,22 @@
 
 import EmojiPicker from '../components/emoji-picker.vue'
 
+import * as types from '../stores/mutation-types'
+// import { mapMutations } from 'vuex'
+
 export default {
 	name: 'LoginPage',
 	components: {
 		EmojiPicker
 	},
 	props: {
-		profile: {
-			type: Object,
-			required: true
+		curUser: {
+			type: Object
+		}
+	},
+	sockets: {
+		['logged in'] (user) {
+			this.$store.commit(types.LOGIN, { user })
 		}
 	},
 	data () {
@@ -39,51 +46,52 @@ export default {
 			height: '200px'
 		}
 		return {
-			username: '',
 			avatar: '💩',
-			openEmojiPicker: false,
+			name: '',
+			picker: false,
 			emojiPickerStyle
 		}
 	},
 	computed: {
-		disableEnter() {
-			if (this.profile && this.profile.username) {
+		disableEnter () {
+			if (this.curUser) {
 				return false
 			}
-			return !this.username.trim() || !this.avatar.trim()
+			return !this.name.trim() || !this.avatar.trim()
 		}
-	},
-	beforeMount() {
-		// >fix unfound src image tag border issue: http://stackoverflow.com/questions/6497992/removing-img-border
 	},
 	methods: {
 		handleSelectAvatar () {
-			this.openEmojiPicker = !this.openEmojiPicker
+			this.picker = !this.picker
 		},
 		handlePickEmoji (emoji) {
 			this.avatar = String.fromCodePoint(`0x${emoji.unified}`)
-			this.openEmojiPicker = false
+			this.picker = false
 		},
 		handleEnterBtnClick () {
-			const data = this.profile.username? null : {
-				avatar:  this.avatar,
-				username: this.username,
-				status: 'online',
-				isTyping: false
+			if (!this.curUser) {
+				// new user
+				const user = {
+					avatar:  this.avatar,
+					name: this.name,
+					status: 'online',
+					isTyping: false
+				}
+				this.$socket.emit('login', user)
+			} else {
+				this.$options.sockets['logged in'].call(this, this.curUser)
 			}
-			this.$emit('onJoinChat', data)
 		}
 	},
 	directives: {
 		disable(el, binding) {
-
 			if (!binding.value) {
 				el.textContent = 'Enter Chatroon'
 				el.disabled = false
 				el.style.color = 'rgba(105, 0, 255, 0.84)'
 				el.style.cursor = 'pointer'
 			} else {
-				el.textContent = 'Choose avatar and username'
+				el.textContent = 'Choose avatar and name'
 				el.disabled = true
 				el.style.color = '#ccc'
 				el.style.cursor = 'not-allowed'
@@ -149,7 +157,7 @@ section.new_user form
 				cursor pointer
 		input
 			display none
-	div.username
+	div.name
 		flex 2
 		-webkit-flex 2
 		border 1px solid lightgreen
@@ -172,7 +180,7 @@ div.enter_btn button
 
 /*@media screen and (max-width 668px)*/
 @media screen and (max-width 512px)
-	div.username input
+	div.name input
 		font-size .8em !important
 	div.enter_btn button
 		font-size 1em

@@ -1,8 +1,8 @@
 <template lang="pug">
 	div.app
 		slot {{ message }}
-		login-page(v-if="currentPage === 'login'" v-bind:profile="profile" @onJoinChat="handleJoinChat")
-		chat-room(v-else v-bind:profile="profile")
+		login-page(v-if="curPage === 'login'" v-bind:curUser="curUser")
+		chat-room(v-else v-bind:curUser="curUser")
 </template>
 
 <script>
@@ -10,7 +10,9 @@
 
 import ChatRoom from './views/chat-room.vue'
 import LoginPage from './views/user-login.vue'
-import store from './stores'
+
+import {mapState} from 'vuex'
+import {clear} from './apis'
 
 export default {
 	name: 'app',
@@ -18,31 +20,17 @@ export default {
 		LoginPage,
 		ChatRoom
 	},
-	data () {
-		return {
-			currentPage: 'login',
-			profile: store.fetch() || {},
-			message: 'greetings from vue2.0'
-		}
-	},
 	beforeCreate () {
-		store.clear()
+		clear() //TODO: remove when prod mode
 	},
+	computed: mapState({
+		curPage: (state) => state.login.curPage,
+		curUser: (state) => state.login.curUser
+	}),
 	created () {
-		// alert('bootstrap app...')
-	},
-	methods: {
-		handleJoinChat(data) {
-			if (data) {
-				this.profile = data
-				if (!store.save(data)) {
-					console.log('Failed to save to storage :(')
-					return
-				}
-			}
-			// enter chatroom
-			this.currentPage = 'room'
-		}
+		this.message = 'Welcome to Vue 2.0!'
+		alert('bootstrap app...')
+		// alert('current page: ' + this.curPage)
 	}
 }
 </script>

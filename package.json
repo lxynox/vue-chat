@@ -12,6 +12,10 @@
 	"xo": {
 		"esnext": true,
 		"semicolon": false,
+		"rules": {
+			"object-curly-spacing": 0,
+			"space-before-function-paren": 0
+		},
 		"overrides": [
 			{
 				"files": "test/**",
@@ -28,12 +32,14 @@
 		"marked": "^0.3.6",
 		"socket.io": "^1.7.3",
 		"socket.io-client": "^1.7.3",
-		"vue": "^2.2.1"
+		"vue": "^2.2.1",
+		"vuex": "^2.2.1"
 	},
 	"devDependencies": {
 		"babel-core": "^6.0.0",
 		"babel-loader": "^6.0.0",
 		"babel-preset-latest": "^6.0.0",
+		"babel-preset-stage-2": "^6.22.0",
 		"cross-env": "^3.0.0",
 		"css-loader": "^0.25.0",
 		"file-loader": "^0.9.0",

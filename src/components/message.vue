@@ -1,7 +1,7 @@
 <template lang="pug">
 	div.message(:class="{myMessage: isMyMsg}")
-		input(v-if="edited" v-model="editedMsg" @keyup.enter="doneEdit" @blur="doneEdit")
-		span.content(v-else :style="contentStyle" @dblclick="handleDBClick") {{ message.text }}
+		input(v-if="editing" v-model="editedMsg" @keyup.enter="doneEdit" @blur="doneEdit")
+		span.content(v-else :style="contentStyle" @dblclick="handleDBClick" v-html="message.text")
 		span.avatar(:style="avatarStyle") {{ message.from.avatar }}
 </template>
 
@@ -13,7 +13,7 @@ export default {
 	props: ['message', 'isMyMsg'],
 	data () {
 		return {
-			edited: false,
+			editing: false,
 			editedMsg: null
 		}
 	},
@@ -41,11 +41,18 @@ export default {
 				return
 			}
 			this.editedMsg = e.target.textContent
-			this.edited = true
+			this.editing = true
 		},
 		doneEdit () {
-			this.$emit('onEditMessage', this.message, this.editedMsg)
-			this.edited = false
+			if (this.message.text === this.editedMsg) {
+				return
+			}
+			const newMSG = Object.assign({}, this.message, {
+				text: this.editedMsg,
+				at: new Date()
+			})
+			this.$emit('onEditMessage', this.message, newMSG)
+			this.editing = false
 		}
 	}
 }

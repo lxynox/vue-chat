@@ -1,21 +1,17 @@
-'use strict'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-const STORAGE_KEY = 'user-vuechat'
+import login from './modules/login'
+import room from './modules/room'
 
-export default {
-	clear() {
-		localStorage.clear()
+Vue.use(Vuex)
+
+const debug = process.env.NODE_ENV !== 'production'
+
+export default new Vuex.Store({
+	modules: {
+		login,
+		room
 	},
-	fetch() {
-		return JSON.parse(localStorage.getItem(STORAGE_KEY))
-	},
-	save(item) {
-		try {
-			localStorage.setItem(STORAGE_KEY, JSON.stringify(item))
-		} catch (err) {
-			console.error(err)
-			return false
-		}
-		return true
-	}
-}
+	strict: debug
+})

@@ -1,124 +1,106 @@
 <template lang="pug">
 	div.room
-		text-panel(v-bind:user="profile" v-bind:messages="messages" @onEditDone="handleEditDone")
-		text-input(v-bind:user="profile" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
-		user-panel(v-bind:curUser="profile" v-bind:users="users" @onStatusChange="handleStatusChange")
+		text-panel(v-bind:curUser="curUser" v-bind:messages="messages" @onEditDone="handleEditDone")
+		text-input(v-bind:curUser="curUser" @onTyping="handleTyping" @onStopTyping="handleStopTyping" @onSend='handleSend')
+		user-panel(v-bind:curUser="curUser" v-bind:users="users" @onStatusChange="handleStatusChange")
 </template>
 
 <script>
 'use strict'
 
 import Vue from 'vue'
+import { mapState, mapMutations } from 'vuex'
 
 import TextPanel from '../components/text-panel.vue'
 import TextInput from '../components/text-input.vue'
 import UserPanel from '../components/user-panel.vue'
 
+import * as types from '../stores/mutation-types'
+
 export default {
 	name: 'chat-room',
-	props: ['profile'],
+	props: ['curUser'],
 	components: {
 		TextPanel,
 		TextInput,
 		UserPanel
 	},
-	data () {
-		const data = {
-			users: [this.profile],
-			messages: [],
-		}
-		return data
-	},
+	computed: mapState({
+		users: (state) => state.room.users,
+		messages: (state) => state.room.messages
+	}),
 	created() {
-		this.$socket.emit('add user', this.profile)
+		this.$socket.emit('add user', this.curUser)
 	},
 	sockets: {
-		login (users, message) {
-			// alert(message)
-			this.users = [this.profile, ...users.slice(0, -1)]
+		// -user action handlers
+		'join chat' (users) {
+			this.join({ users })
 		},
-		'user joined' (newUser) {
-			this.users.push(newUser)
+		'new client' (user) {
+			this.addUser({ user })
 		},
-		typing (username) {
-			// The reactivity system will not trigger if you add or change an object directly in javascript. Specifically in the case of arrays
-			// Use `Vue.set` to work around: https://vuejs.org/v2/guide/list.html#Caveats
-			for (const [idx, user] of this.users.entries()) {
-				if (user.username === username) {
-					user.isTyping = true
-					Vue.set(this.users, idx, user)
-					break
-				}
-			}
+		typing (uID) {
+			this.typing({ uID })
 		},
-		'stop typing' (username) {
-			for (const [idx, user] of this.users.entries()) {
-				if (user.username === username) {
-					user.isTyping = false
-					Vue.set(this.users, idx, user)
-					break
-				}
-			}
+		'stop typing' (uID) {
+			this.stopTyping({ uID })
 		},
+		'update status' (uID, status) {
+			this.changeStatus({ uID, status })
+		},
+		'user left' (uID) {
+			this.leave({ uID })
+		},
+		// -msg handlers
 		'new message' (message) {
-			this.messages.push(message)
+			this.addMSG({ message })
 		},
-		'edit message' (idx, message) {
-			Vue.set(this.messages, idx, message)
+		'edit message' (mID, message) {
+			this.editMSG({ mID, message })
 		},
-		'withdraw message' (idx) {
-			this.messages.splice(idx, 1)
-		},
-		'update status' (username, status) {
-			for (const [idx, user] of this.users.entries()) {
-				if (user.username === username) {
-					user.status = status
-					Vue.set(this.users, idx, user)
-				}
-			}
-		},
-		'user left' (username) {
-			for (const [idx, user] of this.users.entries()) {
-				if (user.username === username) {
-					this.users.splice(idx, 1)
-					break
-				}
-			}
+		'withdraw message' (mID) {
+			this.removeMSG({ mID })
 		}
 	},
 	methods: {
+		...mapMutations({
+			join: types.JOIN_CHAT,
+			addUser: types.NEW_CLIENT,
+			leave: types.LEAVE_CHAT,
+			typing: types.TYPING,
+			stopTyping: types.STOP_TYPING,
+			changeStatus: types.CHANGE_CHAT_STATUS,
+			addMSG: types.ADD_MESSAGE,
+			editMSG: types.EDIT_MESSAGE,
+			removeMSG: types.WITHDRAW_MESSAGE
+		}),
 		handleStatusChange(newStatus) {
-			const username = this.profile.username
-			this.$socket.emit('update status', username, newStatus)
+			this.$socket.emit('update status', newStatus)
 		},
 		handleTyping () {
-			const username = this.profile.username
-			this.$options.sockets.typing.call(this, username)
-			this.$socket.emit('typing', username)
+			this.$options.sockets.typing.call(this, this.curUser.id)
+			this.$socket.emit('typing')
 		},
 		handleStopTyping () {
-			const username = this.profile.username
-			this.$options.sockets['stop typing'].call(this, username)
-			this.$socket.emit('stop typing', username)
+			this.$options.sockets['stop typing'].call(this, this.curUser.id)
+			this.$socket.emit('stop typing')
 		},
 		handleSend (message) {
-			this.messages.push(message)
+			this.$options.sockets['new message'].call(this, message)
 			this.$socket.emit('new message', message)
 		},
-		handleEditDone (message, editedText) {
-			const idx = this.messages.indexOf(message)
-			const text = editedText ? editedText.trim() : null
+		handleEditDone (mID, editedMSG) {
+			const text = editedMSG.text ? editedMSG.text.trim() : null
 
 			if (!text) {
-				this.messages.splice(idx, 1)
-				this.$socket.emit('withdraw message', idx)
+				this.$options.sockets['withdraw message'].call(this, mID)
+				this.$socket.emit('withdraw message', mID)
 				return
 			}
 
-			message.text = text
-			message.at = new Date()
-			Vue.set(this.messages, idx, message)
-			this.$socket.emit('edit message', idx, message)
+			this.$options.sockets['edit message'].call(this, mID, editedMSG)
+			this.$socket.emit('edit message', mID, editedMSG)
 		}
 	}
 }

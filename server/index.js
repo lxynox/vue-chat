@@ -17,65 +17,73 @@ server.listen(port, () => {
 // app.use(express.static(__dirname + '/public'))
 
 // Chatroom
-// let numUsers = 0
-let users = []
+let uIDs = 0
+let	mIDs = 0
+
+const users = []
+const messages = []
 
 io.on('connection', socket => {
-	console.log('new client!')
+	// console.log('new client!')
 	let curUser
 
-	// >sending
-	socket.on('new message', msg => {
-		// socket.emit('new message', msg)
-		socket.broadcast.emit('new message', msg)
-	})
-
-	// >editing
-	socket.on('edit message', (idx, msg) => {
-		socket.broadcast.emit('edit message', idx, msg)
-	})
-
-	// >withdrawing
-	socket.on('withdraw message', idx => {
-		socket.broadcast.emit('withdraw message', idx)
+	// ---Users---
+	// >login
+	socket.on('login', user => {
+		user.id = uIDs++
+		socket.emit('logged in', user)
 	})
 
 	// >joining
 	socket.on('add user', user => {
-		const {username} = user
 		if (curUser) {
 			return
 		}
-
-		users.push(user)
 		curUser = user
-		socket.emit('login', users, 'Welcome to this crappy chatroom ')
-		socket.broadcast.emit('user joined', user)
+		users.push(user)
+		socket.emit('join chat', users)
+		socket.broadcast.emit('new client', curUser)
 	})
 
 	// >typing
-	socket.on('typing', username => {
-		console.log('user typing')
-		socket.broadcast.emit('typing', username)
+	socket.on('typing', () => {
+		// console.log('user typing')
+		socket.broadcast.emit('typing', curUser.id)
 	})
 
-	socket.on('stop typing', username => {
-		console.log('user stop typing')
-		socket.broadcast.emit('stop typing', username)
+	socket.on('stop typing', () => {
+		// console.log('user stop typing')
+		socket.broadcast.emit('stop typing', curUser.id)
 	})
 
 	// >updating status
-	socket.on('update status', (username, status) => {
-		socket.broadcast.emit('update status', username, status)
+	socket.on('update status', status => {
+		socket.broadcast.emit('update status', curUser.id, status)
 	})
 
 	// >leaving
 	socket.on('disconnect', () => {
 		if (curUser) {
 			users.splice(users.indexOf(curUser), 1)
-			socket.broadcast.emit('user left', {
-				username: socket.username
-			})
+			socket.broadcast.emit('user left', curUser.id)
 		}
+	})
+
+	// ---MSGs---
+	// >sending
+	socket.on('new message', msg => {
+		msg.id = mIDs++
+		messages.push(msg)
+		socket.broadcast.emit('new message', msg)
+	})
+
+	// >editing
+	socket.on('edit message', (mID, msg) => {
+		socket.broadcast.emit('edit message', mID, msg)
+	})
+
+	// >withdrawing
+	socket.on('withdraw message', mID => {
+		socket.broadcast.emit('withdraw message', mID)
 	})
 })

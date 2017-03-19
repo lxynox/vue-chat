@@ -25,7 +25,7 @@ const TYPING_TIMER_LENGTH = 500
 
 export default {
 	name: 'text-input',
-	props: ['user' ],
+	props: ['curUser' ],
 	components: {
 		EmojiPicker
 	},
@@ -86,7 +86,7 @@ export default {
 			timeout = setTimeout(later.bind(this), TYPING_TIMER_LENGTH)
 		},
 		handleSendBtnClick () {
-			const text = this.markdown
+			const text = this.inputOptions === 'markdown'
 				? this.compiledMarkdown.trim()
 				: this.message.trim()
 			if (!text) {
@@ -95,7 +95,7 @@ export default {
 
 			const msg = {
 				text,
-				from: this.user,
+				from: this.curUser,
 				at: new Date()
 			}
 			this.$emit('onSend', msg)

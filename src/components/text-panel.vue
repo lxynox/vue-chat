@@ -1,7 +1,7 @@
 <template lang="pug">
 	ul.text_panel
 		li(v-for="msg in messages")
-			message(:class="{my_msg: msg.from === user}" v-bind:message="msg" v-bind:isMyMsg="msg.from === user" @onEditMessage="handleEditMessage" )
+			message(:class="{my_msg: msg.from === curUser}" v-bind:message="msg" v-bind:isMyMsg="msg.from === curUser" @onEditMessage="handleEditMessage" )
 </template>
 
 <script>
@@ -19,14 +19,14 @@ export default {
 			type: Array,
 			required: true
 		},
-		user: {
+		curUser: {
 			type: Object,
 			required: true
 		}
 	},
 	methods: {
-		handleEditMessage (message, editedText) {
-			this.$emit('onEditDone', message, editedText)
+		handleEditMessage (message, editedMSG) {
+			this.$emit('onEditDone', message.id, editedMSG)
 		}
 	},
 }

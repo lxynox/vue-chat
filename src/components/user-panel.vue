@@ -3,8 +3,8 @@
 		ul
 			li(v-for="user in users")
 				span {{ user.avatar }}
-				span {{ user.username }}
-				select(@change="handleChange" v-model="status")(v-if="user === curUser")
+				span {{ user.name }}
+				select(@change="handleChange" v-model="status")(v-if="user.id === curUser.id")
 					option(disabled) choose from following
 					option online
 					option away
