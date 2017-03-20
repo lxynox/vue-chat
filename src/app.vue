@@ -36,16 +36,17 @@ export default {
 </script>
 
 <style lang="stylus">
-primary-color = rgb(136, 80, 255)
+
+root-font = Helvetica, 'Avenir', sans-serif
 root-bg-color = #fff
-app-bg-color = rgba(114, 115, 115, 0.2)
+app-bg-color = rgba(114, 115, 115, 0.1)
+
 html
-	font-family: Helvetica, 'Avenir', sans-serif
+	font-family: root-font
 	font-size: 30px
 	text-align: center
 	height: 100%
 	body
-		/*border: 3px ridge lightgrey*/
 		display: flex
 		flex-direction: column
 		justify-content: center
@@ -54,7 +55,6 @@ html
 		background-color root-bg-color
 		height: @height
 		.app
-			/*border: 2px primary-color outset*/
 			background-color app-bg-color
 			box-shadow -2px -2px 5px 5px app-bg-color
 			width: 80%

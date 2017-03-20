@@ -62,9 +62,9 @@ export default {
 
 <style lang="stylus" scoped>
 
-bg-color = #FDF6E3
+bg-color = lighten(#FDF6E3, 50%)
+
 ul.text_panel
-	/*border 0px inset bg-color*/
 	flex 80%
 	padding 0
 	margin 0
@@ -75,5 +75,4 @@ ul.text_panel
 		list-style none
 		width 100%
 		margin: 10px auto
-		/*background-color olive*/
 </style>

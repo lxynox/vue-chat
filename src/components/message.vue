@@ -58,7 +58,6 @@ export default {
 
 <style lang="stylus" scoped>
 
-my-msg-bgcolor = lightblue
 others-msg-bgcolor = #ccc
 
 .myMessage
@@ -71,7 +70,6 @@ div.message
 		float left
 		margin 0 20px
 	span.content
-		/*border 2px solid*/
 		max-width 200px
 		overflow-wrap break-word
 		padding 5px

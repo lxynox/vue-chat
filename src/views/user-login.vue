@@ -12,7 +12,7 @@
 				div.avatar
 					span.image(@click="handleSelectAvatar") {{avatar}}
 				div.name
-					input(v-model="name" type="text" placeholder="NAME HERE")
+					input(v-model="name" type="text" placeholder="NAME 🆔")
 
 		div.enter_btn
 			button(@click="handleEnterBtnClick" v-disable="disableEnter") Choose avatar and name
@@ -108,6 +108,7 @@ export default {
 <style lang="stylus" scoped>
 @import url('https://fonts.googleapis.com/css?family=Sniglet:800')
 
+// shim to use placeholder
 placeholder()
 	&::-webkit-input-placeholder
 		{block}
@@ -118,12 +119,16 @@ placeholder()
 	&:-ms-input-placeholder
 		{block}
 
+default-font = 'Helvetica', Arial, Avenir, sans-serif
+input-font = fantasy
+btn-font = consolas, monaco, monospace
 text-color = rgba(105, 0, 255, 0.66)
 avatar-bg-color = #ccc666
-enter-btn-color = rgba(212, 172, 58, 0.17)
+input-area-color = rgba(212, 172, 58, 0.1)
+enter-btn-color = rgba(206, 209, 204, 0.3)
 
 section.login
-	font-family 'Helvetica', Arial, Avenir, sans-serif
+	font-family default-font
 	text-align center
 	color text-color
 	font-size 1.2em
@@ -132,24 +137,21 @@ section.returning_user
 	flex-direction row
 	justify-content center
 	div.image
-		/*border 2px ridge magenta*/
 		margin auto 50px
 		font-size 3em
 		border-radius 5px 5px 5px 5px
 		background-color avatar-bg-color
 	p
-		font-family Consolas
+		font-family default-font
 		font-size 2em
 		color text-color
 section.new_user form
-	/*border 14px solid black*/
 	display flex
 	flex-direction row
 	flex-wrap wrap
 	justify-content center
 	margin 10px
 	div.avatar
-		/*border 1px magenta solid*/
 		flex 1
 		span.image
 			border-radius 50%
@@ -164,24 +166,24 @@ section.new_user form
 		input
 			display none
 	div.name
-		/*border 1px solid lightgreen*/
 		flex 2
 		margin-top 20px
 		input
 			&:focus
-				outline none
 				color text-color
 			+placeholder()
 				opacity .1
+				font-family input-font
+				font-size .8em
 			font-size 2em
 			width 100%
 			height 100%
 			border-radius 5px 5px 5px 5px
 			border none
+			background-color input-area-color
 div.enter_btn button
-	/*border 2px outset enter-btn-color*/
 	border none
-	font-family 'Sniglet' cursive
+	font-family btn-font
 	width 100%
 	margin-top 20px
 	font-size 2em

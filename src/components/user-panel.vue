@@ -65,7 +65,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 bg-color = #F5F5F5
+
 .panel
 	flex 30%
 	background-color bg-color
@@ -74,7 +76,6 @@ bg-color = #F5F5F5
 		padding: 0
 		margin: 0
 		li
-			/*border 1px gold solid*/
 			border-bottom 1px lightgrey solid
 			list-style none
 			display flex

@@ -3,7 +3,7 @@
 		div.picker(v-show="inputOptions === 'emoji'")
 			emoji-picker( v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
 		div.markdown(v-show="inputOptions === 'markdown'")
-			div(v-html="compiledMarkdown")
+			div.preview(v-html="compiledMarkdown")
 
 		ul.btns
 			li(@click.prevent="handleEmojiBtnClick" v-bind:class="{active: inputOptions === 'emoji'}") ⎡🎨⎦
@@ -132,7 +132,7 @@ export default {
 
 <style lang="stylus" scoped>
 
-primary-color = #800080
+bg-color = lighten(#ccc, 30%)
 send-btn-color = rgba(#7d66cc, 0.75)
 option-btn-color= lighten(#ccc, 80%)
 
@@ -141,16 +141,13 @@ option-btn-color= lighten(#ccc, 80%)
 	border #fff solid 5px
 
 form
-	/*border 2px dotted lightgrey*/
 	flex 60%
 	background-color bg-color
 	div.picker
-		/*border 1px solid magenta*/
 		position relative
 	div.markdown
-		/*border 1px solid grey*/
 		position relative
-		div
+		div.preview
 			border 1px solid gold
 			border-bottom none
 			position absolute
@@ -159,12 +156,10 @@ form
 			bottom 0
 			overflow-y scroll
 	div.texts
-		/*border 2px dotted lightgrey*/
 		margin 0
 		text-align left
 		height: 100px
 		display flex
-		display -webkit-flex
 		justify-content center
 		button
 			width 120px
@@ -177,22 +172,21 @@ form
 			color rgb(92, 95, 108)
 			padding 0
 			border none
-			/*&:focus
-				outline 2px solid rgba(41, 43, 236, 0.74)*/
 	ul.btns
-		text-align left
 		padding 0
 		margin 0
+		display flex
+		flex-direction row
+		justify-content flex-start
+		align-items stretch
 		li
-			padding 10px 10px
-			/*box-shadow 5px 5px 6px 6px rgb(164, 174, 180)*/
-			list-style none
-			display inline-block
-			&:nth-child(2n+1)
-				background-color option-btn-color
-				border 2px option-btn-color solid
+			&:nth-child(2n)
+				border-left none
 			&:hover
 				cursor pointer
+			list-style none
+			display inline-block
+			border 3px option-btn-color outset
 			font-size 1em
 
 @media screen and (max-width 580px)
