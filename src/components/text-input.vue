@@ -6,11 +6,11 @@
 			div(v-html="compiledMarkdown")
 
 		ul.btns
-			li(@click.prevent="handleEmojiBtnClick") emoji
-			li(@click.prevent="handleMarkdownBtnClick") md
+			li(@click.prevent="handleEmojiBtnClick" v-bind:class="{active: inputOptions === 'emoji'}") ⎡🎨⎦
+			li(@click.prevent="handleMarkdownBtnClick" v-bind:class="{active: inputOptions === 'markdown'}") 〈 🦄 〉
 		div.texts
 			textarea(:value="message" @input="handleInput" placeholder="type messages here" name="message")
-			button(@click.prevent="handleSendBtnClick" name="send-btn") send
+			button(@click.prevent="handleSendBtnClick" name="send-btn") 🚀
 </template>
 
 <script>
@@ -131,50 +131,66 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 primary-color = #800080
+send-btn-color = rgba(#7d66cc, 0.75)
+option-btn-color= lighten(#ccc, 80%)
+
+.active
+	background-color #fff !important
+	border #fff solid 5px
 
 form
+	/*border 2px dotted lightgrey*/
 	flex 60%
-	border 2px dotted lightgrey
+	background-color bg-color
 	div.picker
-		border 1px solid magenta
+		/*border 1px solid magenta*/
 		position relative
 	div.markdown
-		border 1px solid grey
+		/*border 1px solid grey*/
 		position relative
 		div
-			border 1px solid
+			border 1px solid gold
+			border-bottom none
 			position absolute
 			width 100%
 			height 200px
 			bottom 0
 			overflow-y scroll
 	div.texts
+		/*border 2px dotted lightgrey*/
 		margin 0
 		text-align left
-		border 2px dotted lightgrey
 		height: 100px
 		display flex
 		display -webkit-flex
 		justify-content center
 		button
-			width 100px
+			width 120px
+			font-size 1em
+			border none
+			background-color send-btn-color
 		textarea
 			width: 100%
 			font-size 1em
+			color rgb(92, 95, 108)
 			padding 0
-			&:focus
-				outline 2px solid rgba(41, 43, 236, 0.74)
+			border none
+			/*&:focus
+				outline 2px solid rgba(41, 43, 236, 0.74)*/
 	ul.btns
 		text-align left
-		border 2px solid
 		padding 0
 		margin 0
 		li
-			padding 0 10px
-			border-right 5px inset #ccc
+			padding 10px 10px
+			/*box-shadow 5px 5px 6px 6px rgb(164, 174, 180)*/
 			list-style none
 			display inline-block
+			&:nth-child(2n+1)
+				background-color option-btn-color
+				border 2px option-btn-color solid
 			&:hover
 				cursor pointer
 			font-size 1em

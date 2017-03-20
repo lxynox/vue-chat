@@ -12,7 +12,7 @@
 				div.avatar
 					span.image(@click="handleSelectAvatar") {{avatar}}
 				div.name
-					input(v-model="name" type="text" placeholder="name here")
+					input(v-model="name" type="text" placeholder="NAME HERE")
 
 		div.enter_btn
 			button(@click="handleEnterBtnClick" v-disable="disableEnter") Choose avatar and name
@@ -92,7 +92,7 @@ export default {
 			if (!binding.value) {
 				el.textContent = 'Enter Chatroon'
 				el.disabled = false
-				el.style.color = 'rgba(105, 0, 255, 0.84)'
+				el.style.color = 'rgba(105, 0, 255, 0.66)'
 				el.style.cursor = 'pointer'
 			} else {
 				el.textContent = 'Choose avatar and name'
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import url('http://fonts.googleapis.com/css?family=Droid+Sans')
+@import url('https://fonts.googleapis.com/css?family=Sniglet:800')
 
 placeholder()
 	&::-webkit-input-placeholder
@@ -118,9 +118,9 @@ placeholder()
 	&:-ms-input-placeholder
 		{block}
 
-primary-color = #EF9A9A
-secondary-color = #009688
-text-color = rgba(105, 0, 255, 0.84)
+text-color = rgba(105, 0, 255, 0.66)
+avatar-bg-color = #ccc666
+enter-btn-color = rgba(212, 172, 58, 0.17)
 
 section.login
 	font-family 'Helvetica', Arial, Avenir, sans-serif
@@ -129,26 +129,28 @@ section.login
 	font-size 1.2em
 section.returning_user
 	display flex
-	flex-direction column
-	align-items center
-	div.image
-		border 2px ridge magenta
-		border-radius 5px 5px 5px 5px
-		font-size 3em
-		/*background-color purple*/
-	p
-		font-family Droid Sans
-		color cyan
-section.new_user form
-	display flex
-	flex-flow row wrap
+	flex-direction row
 	justify-content center
+	div.image
+		/*border 2px ridge magenta*/
+		margin auto 50px
+		font-size 3em
+		border-radius 5px 5px 5px 5px
+		background-color avatar-bg-color
+	p
+		font-family Consolas
+		font-size 2em
+		color text-color
+section.new_user form
+	/*border 14px solid black*/
+	display flex
+	flex-direction row
+	flex-wrap wrap
+	justify-content center
+	margin 10px
 	div.avatar
-		border 1px magenta solid
+		/*border 1px magenta solid*/
 		flex 1
-		@media screen and (max-width 512px)
-			flex none
-			width 100%
 		span.image
 			border-radius 50%
 			display inline-block
@@ -156,37 +158,52 @@ section.new_user form
 			height 150px
 			font-size 3em
 			box-shadow 0 0 0 black
-			background-color #ccc666
+			background-color avatar-bg-color
 			&:hover
 				cursor pointer
 		input
 			display none
 	div.name
+		/*border 1px solid lightgreen*/
 		flex 2
-		-webkit-flex 2
-		border 1px solid lightgreen
+		margin-top 20px
 		input
 			&:focus
 				outline none
 				color text-color
 			+placeholder()
-				opacity .2
-			font-size 1.5em
+				opacity .1
+			font-size 2em
 			width 100%
 			height 100%
-			border 0
-			border-bottom 1px inset black
+			border-radius 5px 5px 5px 5px
+			border none
 div.enter_btn button
-	font-size 2em
-	color lighten(#ccc, 50%)
+	/*border 2px outset enter-btn-color*/
+	border none
+	font-family 'Sniglet' cursive
 	width 100%
+	margin-top 20px
+	font-size 2em
+	background-color enter-btn-color
 	cursor not-allowed
 
 /*@media screen and (max-width 668px)*/
-@media screen and (max-width 512px)
+@media screen and (min-width 512px) and (max-width 768px)
+	div.avatar
+		flex none !important
+		width 100% !important
 	div.name input
 		font-size .8em !important
-	div.enter_btn button
-		font-size 1em
+		width  100% !important
 
+@media screen and (max-width 512px)
+	div.avatar
+		flex none !important
+		width 100% !important
+	div.name input
+		font-size .8em !important
+		width  100% !important
+	div.enter_btn button
+		font-size 1.5em
 </style>

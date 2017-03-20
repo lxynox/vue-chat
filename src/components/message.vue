@@ -65,14 +65,18 @@ others-msg-bgcolor = #ccc
 	text-align right !important
 
 div.message
+	font-family Avenir, sans-serif
 	text-align left
 	span.avatar
 		float left
 		margin 0 20px
 	span.content
+		/*border 2px solid*/
 		max-width 200px
 		overflow-wrap break-word
-		padding 0 10px
+		padding 5px
+		font-size .8em
+		text-align center
 		display  inline-block
 		border-radius 5px 5px 5px 5px
 		background-color others-msg-bgcolor
