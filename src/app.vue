@@ -29,15 +29,20 @@ export default {
 		curUser: (state) => state.login.curUser
 	}),
 	created () {
-		this.message = 'Welcome to Vue 2.0!'
+		// this.message = 'Welcome to Vue 2.0!'
 		alert('bootstrap app...')
 	}
 }
 </script>
 
 <style lang="stylus">
+
+root-font = Helvetica, 'Avenir', sans-serif
+root-bg-color = #fff
+app-bg-color = rgba(114, 115, 115, 0.1)
+
 html
-	font-family: 'Avenir', Helvetica, arial, sans-serif
+	font-family: root-font
 	font-size: 30px
 	text-align: center
 	height: 100%
@@ -47,10 +52,11 @@ html
 		justify-content: center
 		align-items: center
 		padding: 0
-		border: 3px ridge lightgrey
+		background-color root-bg-color
 		height: @height
 		.app
-			border: 2px orange outset
+			background-color app-bg-color
+			box-shadow -2px -2px 5px 5px app-bg-color
 			width: 80%
 			max-width: 768px
 </style>

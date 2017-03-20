@@ -33,57 +33,22 @@ export default {
 		this.$socket.emit('add user', this.curUser)
 	},
 	sockets: {
-		// -user action handlers
 		'join chat' (users) {
 			this.join({ users })
 		},
 		'new client' (user) {
 			this.addUser({ user })
 		},
-		// typing (uID) {
-		// 	this.typing({ uID })
-		// },
-		// 'stop typing' (uID) {
-		// 	this.stopTyping({ uID })
-		// },
-		// 'update status' (uID, status) {
-		// 	this.changeStatus({ uID, status })
-		// },
 		'user left' (uID) {
 			this.leave({ uID })
-		},
-		// -msg handlers
-		// 'new message' (message) {
-		// 	this.addMSG({ message })
-		// },
+		}
 	},
 	methods: {
 		...mapMutations({
 			join: types.JOIN_CHAT,
 			addUser: types.NEW_CLIENT,
 			leave: types.LEAVE_CHAT,
-			// typing: types.TYPING,
-			// stopTyping: types.STOP_TYPING,
-			// changeStatus: types.CHANGE_CHAT_STATUS,
-			// addMSG: types.ADD_MESSAGE,
-			// editMSG: types.EDIT_MESSAGE,
-			// removeMSG: types.WITHDRAW_MESSAGE
-		}),
-		// handleStatusChange(newStatus) {
-		// 	this.$socket.emit('update status', newStatus)
-		// },
-		// handleTyping () {
-		// 	this.$options.sockets.typing.call(this, this.curUser.id)
-		// 	this.$socket.emit('typing')
-		// },
-		// handleStopTyping () {
-		// 	this.$options.sockets['stop typing'].call(this, this.curUser.id)
-		// 	this.$socket.emit('stop typing')
-		// },
-		// handleSend (message) {
-		// 	this.$options.sockets['new message'].call(this, message)
-		// 	this.$socket.emit('new message', message)
-		// },
+		})
 	}
 }
 </script>

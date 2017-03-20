@@ -65,18 +65,23 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+bg-color = #F5F5F5
+
 .panel
 	flex 30%
+	background-color bg-color
 	ul
 		font-size .5em
 		padding: 0
 		margin: 0
 		li
-			border 1px gold solid
+			border-bottom 1px lightgrey solid
 			list-style none
 			display flex
 			justify-content space-around
 			align-items center
+			padding 2px
 			select
 				width 80px
 			span b
