@@ -14,7 +14,7 @@ server.listen(port, () => {
 })
 
 // Routing
-// app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname))
 
 // Chatroom
 let uIDs = 0

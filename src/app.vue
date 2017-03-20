@@ -22,16 +22,16 @@ export default {
 		ChatRoom
 	},
 	beforeCreate () {
-		clear() //TODO: remove when prod mode
+		//TODO: remove when prod mode
+		if (process.env.NODE_ENV !== 'production') {
+			alert('bootstrap app...')
+			clear()
+		}
 	},
 	computed: mapState({
 		curPage: (state) => state.login.curPage,
 		curUser: (state) => state.login.curUser
-	}),
-	created () {
-		// this.message = 'Welcome to Vue 2.0!'
-		alert('bootstrap app...')
-	}
+	})
 }
 </script>
 

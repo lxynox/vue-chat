@@ -7,7 +7,7 @@
 
 		ul.btns
 			li(@click.prevent="handleEmojiBtnClick" v-bind:class="{active: inputOptions === 'emoji'}") ⎡🎨⎦
-			li(@click.prevent="handleMarkdownBtnClick" v-bind:class="{active: inputOptions === 'markdown'}") 〈 🦄 〉
+			li(@click.prevent="handleMarkdownBtnClick" v-bind:class="{active: inputOptions === 'markdown'}") 〈🦄〉
 		div.texts
 			textarea(:value="message" @input="handleInput" placeholder="type messages here" name="message")
 			button(@click.prevent="handleSendBtnClick" name="send-btn") 🚀

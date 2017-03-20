@@ -90,7 +90,7 @@ export default {
 	directives: {
 		disable(el, binding) {
 			if (!binding.value) {
-				el.textContent = 'Enter Chatroon'
+				el.textContent = 'Enter Chatroom'
 				el.disabled = false
 				el.style.color = 'rgba(105, 0, 255, 0.66)'
 				el.style.cursor = 'pointer'
@@ -137,7 +137,7 @@ section.returning_user
 	flex-direction row
 	justify-content center
 	div.image
-		margin auto 50px
+		margin auto 20px
 		font-size 3em
 		border-radius 5px 5px 5px 5px
 		background-color avatar-bg-color
