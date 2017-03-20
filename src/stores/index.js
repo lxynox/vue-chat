@@ -8,6 +8,11 @@ Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
+export const mutations = {
+	...login.mutations,
+	...room.mutations
+}
+
 export default new Vuex.Store({
 	modules: {
 		login,
