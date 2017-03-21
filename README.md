@@ -1,6 +1,6 @@
 # vue-chat
 
-> A Vue.js project
+> A Vue.js project, yet a simple start up app for vuex and socket.io
 
 ## Build Setup
 
@@ -15,4 +15,12 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Preview
+
+![vue-chat preview](./preview.PNG)
+
+## Features
+
+- Emoji as avatar
+- Markdown support for text editing
+- Real-time(socket.io) user action broadcasting

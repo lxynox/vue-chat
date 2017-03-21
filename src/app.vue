@@ -1,6 +1,6 @@
 <template lang="pug">
 	div.app
-		slot {{ message }}
+		//- slot {{ message }}
 		login-page(v-if="curPage === 'login'" v-bind:curUser="curUser")
 		chat-room(v-else v-bind:curUser="curUser")
 </template>

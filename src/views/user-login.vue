@@ -7,12 +7,12 @@
 
 		//- h2 new user
 		section.new_user(v-else)
-			emoji-picker(v-show="picker" v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
 			form
 				div.avatar
 					span.image(@click="handleSelectAvatar") {{avatar}}
 				div.name
-					input(v-model="name" type="text" placeholder="NAME 🆔")
+					input(v-model="name" type="text" placeholder="🆔")
+			emoji-picker(v-show="picker" v-bind:baseStyle="emojiPickerStyle" @onPickEmoji="handlePickEmoji")
 
 		div.enter_btn
 			button(@click="handleEnterBtnClick" v-disable="disableEnter") Choose avatar and name
@@ -120,7 +120,6 @@ placeholder()
 		{block}
 
 default-font = 'Helvetica', Arial, Avenir, sans-serif
-input-font = fantasy
 btn-font = consolas, monaco, monospace
 text-color = rgba(105, 0, 255, 0.66)
 avatar-bg-color = #ccc666
@@ -173,10 +172,10 @@ section.new_user form
 				color text-color
 			+placeholder()
 				opacity .1
-				font-family input-font
 				font-size .8em
+				text-align center
 			font-size 2em
-			width 100%
+			width 70%
 			height 100%
 			border-radius 5px 5px 5px 5px
 			border none
@@ -192,20 +191,14 @@ div.enter_btn button
 
 /*@media screen and (max-width 668px)*/
 @media screen and (min-width 512px) and (max-width 768px)
-	div.avatar
-		flex none !important
-		width 100% !important
-	div.name input
-		font-size .8em !important
-		width  100% !important
+	form
+		display block !important
 
 @media screen and (max-width 512px)
-	div.avatar
-		flex none !important
-		width 100% !important
-	div.name input
-		font-size .8em !important
-		width  100% !important
+	form
+		display block !important
+		div.name input
+			font-size 1em !important
 	div.enter_btn button
-		font-size 1.5em
+		font-size 1.2em
 </style>
